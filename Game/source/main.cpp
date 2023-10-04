@@ -37,11 +37,17 @@ class basicwindow : public DocumentWindow
 
 	void Show() override
 	{
-
-			ImGui::Begin("Basic Window");
-			ImGui::Text("Hello World");
-			ImGui::ShowDemoWindow();
-			ImGui::End();	
+		ImGui::Begin("About");
+		ImGui::Text("Hello World");
+		ImGui::End();
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Quit"))
+			{
+				WantsToQuit = true;
+			}
+			ImGui::EndMenu();
+		}
 	}
 
 	void Update() override
