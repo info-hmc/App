@@ -91,22 +91,15 @@ void Tick(float DeltaTime)
 int main(int argc, char* argv[])
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
-	
-	// add debug end of the window title if in debug mode
 	InitWindow(800, 600, "CPC 4");
+	SetWindowMinSize(800, 600);
 
 	// get current monitor resolution
 	int screenWidth = GetMonitorWidth(0);
 	int screenHeight = GetMonitorHeight(0);
-	screenHeight /= 1.5f;
-	screenWidth /= 1.5f;
 
 	// set window resolution
-	SetWindowSize(screenWidth, screenHeight);
-
-	// set windows min size
-	SetWindowMinSize(800, 600);
-
+	SetWindowSize((screenWidth / 1.5f), (screenHeight / 1.5f));
 
 	//// new scope to unload when scope ends
 	//{
