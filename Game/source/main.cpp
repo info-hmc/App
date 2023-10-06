@@ -80,9 +80,12 @@ void MenuBar()
 	}
 }
 
-void FixedUpdate(float DeltaTime)
+void Tick(float DeltaTime)
 {
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+	ClearBackground(WHITE);
+	MenuBar();
+	BasicWindow.Show();
 }
 
 int main(int argc, char* argv[])
@@ -122,39 +125,28 @@ int main(int argc, char* argv[])
 	rlImGuiSetup();
 	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
-	// fixed update time
+	//update time
 	const float FIXED_UPDATE_TIME = 1.0f / 60.0f;
-	float accumulator = 0.0f;
 	float deltaTime = 0.0f;
 	float previousTime = GetTime();
+	float currentTime = 0.f;
 
 	while (!WantsToQuit)
 	{
-		BeginDrawing();
-		ClearBackground(WHITE);
-		rlImGuiBegin();	
-
-		MenuBar();
-		BasicWindow.Show();
-
-		rlImGuiEnd();
-		EndDrawing();
-		float currentTime = GetTime();
+		currentTime = GetTime();
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		accumulator += deltaTime;
+		BeginDrawing();
+		rlImGuiBegin();			
 
-		while (accumulator >= FIXED_UPDATE_TIME)
-		{
-			FixedUpdate(deltaTime);
-			accumulator -= FIXED_UPDATE_TIME;
-		}
+		Tick(deltaTime);
+
+		rlImGuiEnd();
+		EndDrawing();
 
 		if (WindowShouldClose())
-		{
-			WantsToQuit = true;
-		}
+		WantsToQuit = true;
 	}
 	
 	rlImGuiShutdown();
