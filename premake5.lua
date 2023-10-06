@@ -59,6 +59,23 @@ function check_raylib()
 	end
 end
 
+function check_rayres()
+	if(os.isdir("lib/rres") == false) then
+		if(not os.isfile("rres-master.zip")) then
+			print("Rayres not found, downloading from github")
+			local result_str, response_code = http.download("https://codeload.github.com/raysan5/rres/zip/refs/tags/1.2.0", "rres-master.zip", {
+				progress = download_progress,
+				headers = { "From: Premake", "Referer: Premake" }
+			})
+		end
+		print("Unzipping to " ..  os.getcwd())
+		zip.extract("rres-master.zip", os.getcwd())
+		ensure_lib_directory()
+		os.rename("rres-1.2.0", "lib/rres")
+		os.remove("rres-master.zip")
+	end
+end
+
 function check_imgui()
 	if(os.isdir("lib/imgui") == false) then
 		if(not os.isfile("imgui-master.zip")) then
@@ -74,23 +91,6 @@ function check_imgui()
 		os.rename("imgui-master", "lib/imgui")
 		os.remove("imgui-master.zip")
 	end
-end
-
-function check_bulletphys()
-    if (os.isdir("lib/bullet3") == false) then
-        if (not os.isfile("bullet3-master.zip")) then
-            print("Bullet3 not found, downloading from github")
-            local result_str, response_code = http.download("https://github.com/bulletphysics/bullet3/archive/refs/heads/master.zip", "bullet3-master.zip", {
-                progress = download_progress,
-                headers = { "From: Premake", "Referer: Premake" }
-            })
-        end
-        print("Unzipping to " ..  os.getcwd())
-        zip.extract("bullet3-master.zip", os.getcwd())
-        ensure_lib_directory()
-        os.rename("bullet3-master", "lib/bullet3")
-        os.remove("bullet3-master.zip")
-    end
 end
 
 workspace "App"
@@ -113,9 +113,10 @@ workspace "App"
 	
 
 	cdialect "C99"
-	cppdialect "C++11"
+	cppdialect "C++20"
 	check_raylib()
 	check_imgui()
+	check_rayres()
 
 	include ("raylib_premake5.lua")
 		
@@ -134,13 +135,14 @@ project "UnknowledgedEngine"
 	"UnknowledgedEngine/header",
 	"lib/raygui/src",
 	"extras",
+	"lib/rres/src"
 	}
 
 	vpaths 
 	{
 		["ImGui Files"] = { "lib/imgui/*.h","lib/imgui/*.cpp", "lib/imgui-master/*.h", "lib/imgui-master/*.cpp" },
 		["UnknowledgedEngine/Header Files"] = { "UnknowledgedEngine/**.h", "UnknowledgedEngine/header/**.hpp" },
-    ["UnknowledgedEngine/Source Files"] = { "UnknowledgedEngine/**.cpp", "UnknowledgedEngine/**.c" },
+    	["UnknowledgedEngine/Source Files"] = { "UnknowledgedEngine/**.cpp", "UnknowledgedEngine/**.c" },
 	}
 
 	files 
@@ -152,6 +154,7 @@ project "UnknowledgedEngine"
 		"external/**.h",
 		"UnknowledgedEngine/**.cpp",
 		"UnknowledgedEngine/**.h",
+		"lib/rayres/**.h",
 	}
 
 	defines {"IMGUI_DISABLE_OBSOLETE_FUNCTIONS","IMGUI_DISABLE_OBSOLETE_KEYIO"}
@@ -166,8 +169,8 @@ project "UnknowledgedEngine"
 	
 	vpaths 
 	{
-	["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
-			["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
+		["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
+		["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
 	}
 
 	files 
@@ -183,7 +186,8 @@ project "UnknowledgedEngine"
 	"external", 
 	"lib/imgui",
 	"UnknowledgedEngine/header",
-	"extras"
+	"extras",
+	"lib/rres/src"
 	}
 
 	link_raylib()

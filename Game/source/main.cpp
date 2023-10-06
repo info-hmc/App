@@ -6,6 +6,15 @@
 #include <cstdio>
 #include <iostream>
 
+#pragma warning (disable : 4996)
+
+#define RRES_RAYLIB_IMPLEMENTATION
+#include "rres-raylib.h"
+
+#define RRES_IMPLEMENTATION
+#include "rres.h"
+
+
 bool WantsToQuit = false;
 bool IsPaused = false;
 
@@ -38,30 +47,43 @@ class basicwindow : public DocumentWindow
 
 	void Show() override
 	{
-		ImGui::Begin("About");
-		ImGui::Text("Hello World");
-		ImGui::End();
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Quit"))
-			{
-				WantsToQuit = true;
-			}
-			ImGui::EndMenu();
+		if (Open)
+		{ 
+			ImGui::Begin("About");
+			ImGui::Text("Hello World");
+			ImGui::End();
 		}
 	}
 
-	void Update() override
-	{
-	}
+	void Update() override {}
 };
 basicwindow BasicWindow;
+
+void MenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit"))
+				WantsToQuit = true;
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			ImGui::MenuItem("Example Window", nullptr, &BasicWindow.Open);
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
 
 void FixedUpdate(float DeltaTime)
 {
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-	// std cout delta time
-	std::cout << "Delta Time: " << DeltaTime << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -69,7 +91,7 @@ int main(int argc, char* argv[])
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
 	
 	// add debug end of the window title if in debug mode
-	InitWindow(800, 600, "Imgui App");
+	InitWindow(800, 600, "CPC 4");
 
 	// get current monitor resolution
 	int screenWidth = GetMonitorWidth(0);
@@ -77,20 +99,25 @@ int main(int argc, char* argv[])
 	screenHeight /= 1.5f;
 	screenWidth /= 1.5f;
 
-	std::cout << "Screen Width: " << screenWidth << std::endl;
-	std::cout << "Screen Height: " << screenHeight << std::endl;
-
 	// set window resolution
 	SetWindowSize(screenWidth, screenHeight);
 
-	// window icon
-	Image icon = LoadImage("appicon.png");
-	if (icon.data != NULL)
-	SetWindowIcon(icon);
-	UnloadImage(icon);  // Unload icon image (not needed any more)
-
 	// set windows min size
 	SetWindowMinSize(800, 600);
+
+
+	// new scope to unload when scope ends
+	{
+		// here we set the central file where we store all of the external data
+		rresCentralDir dir = rresLoadCentralDirectory("icon.rrp");
+		int appiconid = rresGetResourceId(dir, "appicon.png");
+		rresSetCipherPassword("password12345");
+		rresResourceChunk chunkTex = rresLoadResourceChunk("icon.rrp", appiconid);
+		Image Appicon = LoadImageFromResource(chunkTex);
+		if (Appicon.data != NULL)
+			SetWindowIcon(Appicon);
+		UnloadImage(Appicon);  // Unload icon image (not needed any more)
+	}
 
 	//setup imgui
 	rlImGuiSetup();
@@ -105,10 +132,10 @@ int main(int argc, char* argv[])
 	while (!WantsToQuit)
 	{
 		BeginDrawing();
-		ClearBackground(GRAY);
+		ClearBackground(WHITE);
 		rlImGuiBegin();	
 
-		DrawFPS(10, 10);
+		MenuBar();
 		BasicWindow.Show();
 
 		rlImGuiEnd();
@@ -124,9 +151,9 @@ int main(int argc, char* argv[])
 			FixedUpdate(deltaTime);
 			accumulator -= FIXED_UPDATE_TIME;
 		}
+
 		if (WindowShouldClose())
 		{
-
 			WantsToQuit = true;
 		}
 	}
