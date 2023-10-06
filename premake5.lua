@@ -129,13 +129,12 @@ project "UnknowledgedEngine"
 	include_raylib()
 	includedirs
 	{ 
-	"lib/rlImGui",
-	"./", 
-	"lib/imgui",
-	"UnknowledgedEngine/header",
-	"lib/raygui/src",
-	"extras",
-	"lib/rres/src"
+		"lib/rlImGui",
+		"./external", 
+		"lib/imgui",
+		"UnknowledgedEngine/header",
+		"extras",
+		"lib/rres/src"
 	}
 
 	vpaths 
@@ -175,19 +174,19 @@ project "UnknowledgedEngine"
 
 	files 
 	{
-	"Game/**.cpp",
-	"Game/**.c",
-	"Game/**.h",
+		"Game/**.cpp",
+		"Game/**.c",
+		"Game/**.h",
 	}
 
 	includedirs
 	{
-	"Game/header/",
-	"external", 
-	"lib/imgui",
-	"UnknowledgedEngine/header",
-	"extras",
-	"lib/rres/src"
+		"Game/header/",
+		"external", 
+		"lib/imgui",
+		"UnknowledgedEngine/header",
+		"extras",
+		"lib/rres/src"
 	}
 
 	link_raylib()
