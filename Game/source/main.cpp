@@ -4,6 +4,7 @@
 #include "rlImGui.h"
 #include "rlImGuiColors.h"
 #include <cstdio>
+#include <iostream>
 
 bool WantsToQuit = false;
 bool IsPaused = false;
@@ -56,52 +57,47 @@ class basicwindow : public DocumentWindow
 };
 basicwindow BasicWindow;
 
-void FixedUpdate()
+void FixedUpdate(float DeltaTime)
 {
-
-}
-
-void UpdateWindow()
-{
-	if (!IsWindowFocused())
-	{
-		IsPaused = true;
-		SetTargetFPS(20);
-	}
-	else
-	{
-		SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-	}
-	if (WindowShouldClose())
-	{
-		WantsToQuit = true;
-	}
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+	// std cout delta time
+	std::cout << "Delta Time: " << DeltaTime << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-	int screenWidth = 1200;
-	int screenHeight = 900;
-
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
 	
 	// add debug end of the window title if in debug mode
-	InitWindow(screenWidth, screenHeight, "Imgui App");
+	InitWindow(800, 600, "Imgui App");
 
+	// get current monitor resolution
+	int screenWidth = GetMonitorWidth(0);
+	int screenHeight = GetMonitorHeight(0);
+	screenHeight /= 1.5f;
+	screenWidth /= 1.5f;
+
+	std::cout << "Screen Width: " << screenWidth << std::endl;
+	std::cout << "Screen Height: " << screenHeight << std::endl;
+
+	// set window resolution
+	SetWindowSize(screenWidth, screenHeight);
+
+	// window icon
 	Image icon = LoadImage("appicon.png");
 	if (icon.data != NULL)
 	SetWindowIcon(icon);
-
 	UnloadImage(icon);  // Unload icon image (not needed any more)
+
+	// set windows min size
+	SetWindowMinSize(800, 600);
 
 	//setup imgui
 	rlImGuiSetup();
 	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
-	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-
 	// fixed update time
-	const float FIXED_UPDATE_TIME = 1.0f / 120.0f;
+	const float FIXED_UPDATE_TIME = 1.0f / 60.0f;
 	float accumulator = 0.0f;
 	float deltaTime = 0.0f;
 	float previousTime = GetTime();
@@ -113,8 +109,6 @@ int main(int argc, char* argv[])
 		rlImGuiBegin();	
 
 		DrawFPS(10, 10);
-		UpdateWindow();
-
 		BasicWindow.Show();
 
 		rlImGuiEnd();
@@ -127,8 +121,13 @@ int main(int argc, char* argv[])
 
 		while (accumulator >= FIXED_UPDATE_TIME)
 		{
-			FixedUpdate();
+			FixedUpdate(deltaTime);
 			accumulator -= FIXED_UPDATE_TIME;
+		}
+		if (WindowShouldClose())
+		{
+
+			WantsToQuit = true;
 		}
 	}
 	

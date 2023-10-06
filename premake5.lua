@@ -93,7 +93,7 @@ function check_bulletphys()
     end
 end
 
-workspace "Unknowledged Engine"
+workspace "App"
 	configurations { "Debug", "Release" }
 	platforms { "x64"}
 	defaultplatform "x64"
