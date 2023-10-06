@@ -6,13 +6,12 @@
 #include <cstdio>
 #include <iostream>
 
-#pragma warning (disable : 4996)
-
-#define RRES_RAYLIB_IMPLEMENTATION
-#include "rres-raylib.h"
-
-#define RRES_IMPLEMENTATION
-#include "rres.h"
+//#pragma warning (disable : 4996)
+//#define RRES_RAYLIB_IMPLEMENTATION
+//#include "rres-raylib.h"
+//
+//#define RRES_IMPLEMENTATION
+//#include "rres.h"
 
 
 bool WantsToQuit = false;
@@ -106,18 +105,18 @@ int main(int argc, char* argv[])
 	SetWindowMinSize(800, 600);
 
 
-	// new scope to unload when scope ends
-	{
-		// here we set the central file where we store all of the external data
-		rresCentralDir dir = rresLoadCentralDirectory("icon.rrp");
-		int appiconid = rresGetResourceId(dir, "appicon.png");
-		rresSetCipherPassword("password12345");
-		rresResourceChunk chunkTex = rresLoadResourceChunk("icon.rrp", appiconid);
-		Image Appicon = LoadImageFromResource(chunkTex);
-		if (Appicon.data != NULL)
-			SetWindowIcon(Appicon);
-		UnloadImage(Appicon);  // Unload icon image (not needed any more)
-	}
+	//// new scope to unload when scope ends
+	//{
+	//	// here we set the central file where we store all of the external data
+	//	rresCentralDir dir = rresLoadCentralDirectory("icon.rrp");
+	//	int appiconid = rresGetResourceId(dir, "appicon.png");
+	//	rresSetCipherPassword("password12345");
+	//	rresResourceChunk chunkTex = rresLoadResourceChunk("icon.rrp", appiconid);
+	//	Image Appicon = LoadImageFromResource(chunkTex);
+	//	if (Appicon.data != NULL)
+	//		SetWindowIcon(Appicon);
+	//	UnloadImage(Appicon);  // Unload icon image (not needed any more)
+	//}
 
 	//setup imgui
 	rlImGuiSetup();
