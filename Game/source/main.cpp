@@ -5,9 +5,9 @@
 #include "rlImGuiColors.h"
 #include <cstdio>
 #include <iostream>
-
-bool WantsToQuit = false;
-bool IsPaused = false;
+#include "UImanager.h"
+#include "LoginUI.h"
+#include "Globals.h"
 
 class DocumentWindow
 {
@@ -38,97 +38,91 @@ class basicwindow : public DocumentWindow
 
 	void Show() override
 	{
-		ImGui::Begin("About");
-		ImGui::Text("Hello World");
-		ImGui::End();
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Quit"))
-			{
-				WantsToQuit = true;
-			}
-			ImGui::EndMenu();
+		if (Open)
+		{ 
+			ImGui::Begin("About");
+			ImGui::Text("Hello World");
+			ImGui::End();
 		}
 	}
 
-	void Update() override
-	{
-	}
+	void Update() override {}
 };
 basicwindow BasicWindow;
 
-void FixedUpdate(float DeltaTime)
+void MenuBar()
 {
-	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-	// std cout delta time
-	std::cout << "Delta Time: " << DeltaTime << std::endl;
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit"))
+				WantsToQuit = true;
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			ImGui::MenuItem("Example Window", nullptr, &BasicWindow.Open);
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
+
+void Tick(float DeltaTime)
+{
+	ClearBackground(WHITE);
+	MenuBar();
+	BasicWindow.Show();
 }
 
 int main(int argc, char* argv[])
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
-	
-	// add debug end of the window title if in debug mode
-	InitWindow(800, 600, "Imgui App");
+	InitWindow(800, 600, "CPC 4");
+	SetWindowMinSize(800, 600);
 
 	// get current monitor resolution
 	int screenWidth = GetMonitorWidth(0);
 	int screenHeight = GetMonitorHeight(0);
-	screenHeight /= 1.5f;
-	screenWidth /= 1.5f;
-
-	std::cout << "Screen Width: " << screenWidth << std::endl;
-	std::cout << "Screen Height: " << screenHeight << std::endl;
 
 	// set window resolution
-	SetWindowSize(screenWidth, screenHeight);
+	SetWindowSize((screenWidth / 1.5f), (screenHeight / 1.5f));
 
-	// window icon
-	Image icon = LoadImage("appicon.png");
-	if (icon.data != NULL)
-	SetWindowIcon(icon);
-	UnloadImage(icon);  // Unload icon image (not needed any more)
-
-	// set windows min size
-	SetWindowMinSize(800, 600);
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
 	//setup imgui
 	rlImGuiSetup();
 	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
-	// fixed update time
+	//update time
 	const float FIXED_UPDATE_TIME = 1.0f / 60.0f;
-	float accumulator = 0.0f;
 	float deltaTime = 0.0f;
 	float previousTime = GetTime();
+	float currentTime = 0.f;
+
+	UIManager UIManager = new UIManager;
+	UIManager::SetCurrentUI(LoginUI);
 
 	while (!WantsToQuit)
 	{
-		BeginDrawing();
-		ClearBackground(GRAY);
-		rlImGuiBegin();	
-
-		DrawFPS(10, 10);
-		BasicWindow.Show();
-
-		rlImGuiEnd();
-		EndDrawing();
-		float currentTime = GetTime();
+		currentTime = GetTime();
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 
-		accumulator += deltaTime;
+		BeginDrawing();
+		rlImGuiBegin();			
 
-		while (accumulator >= FIXED_UPDATE_TIME)
-		{
-			FixedUpdate(deltaTime);
-			accumulator -= FIXED_UPDATE_TIME;
-		}
+		Tick(deltaTime);
+		
+		rlImGuiEnd();
+		EndDrawing();
+
 		if (WindowShouldClose())
-		{
-
-			WantsToQuit = true;
-		}
+		WantsToQuit = true;
 	}
 	
 	rlImGuiShutdown();

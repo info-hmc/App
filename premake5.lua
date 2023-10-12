@@ -76,23 +76,6 @@ function check_imgui()
 	end
 end
 
-function check_bulletphys()
-    if (os.isdir("lib/bullet3") == false) then
-        if (not os.isfile("bullet3-master.zip")) then
-            print("Bullet3 not found, downloading from github")
-            local result_str, response_code = http.download("https://github.com/bulletphysics/bullet3/archive/refs/heads/master.zip", "bullet3-master.zip", {
-                progress = download_progress,
-                headers = { "From: Premake", "Referer: Premake" }
-            })
-        end
-        print("Unzipping to " ..  os.getcwd())
-        zip.extract("bullet3-master.zip", os.getcwd())
-        ensure_lib_directory()
-        os.rename("bullet3-master", "lib/bullet3")
-        os.remove("bullet3-master.zip")
-    end
-end
-
 workspace "App"
 	configurations { "Debug", "Release" }
 	platforms { "x64"}
@@ -113,13 +96,13 @@ workspace "App"
 	
 
 	cdialect "C99"
-	cppdialect "C++11"
+	cppdialect "C++20"
 	check_raylib()
 	check_imgui()
 
 	include ("raylib_premake5.lua")
 		
-project "UnknowledgedEngine"
+project "CPC4-Lib"
 	kind "StaticLib"
 	location "_build"
 	targetdir "_bin/%{cfg.buildcfg}"
@@ -128,19 +111,19 @@ project "UnknowledgedEngine"
 	include_raylib()
 	includedirs
 	{ 
-	"lib/rlImGui",
-	"./", 
-	"lib/imgui",
-	"UnknowledgedEngine/header",
-	"lib/raygui/src",
-	"extras",
+		"lib/rlImGui",
+		"./external", 
+		"lib/imgui",
+		"CPC4-Lib/header",
+		"extras",
+		"lib/rres/src"
 	}
 
 	vpaths 
 	{
 		["ImGui Files"] = { "lib/imgui/*.h","lib/imgui/*.cpp", "lib/imgui-master/*.h", "lib/imgui-master/*.cpp" },
-		["UnknowledgedEngine/Header Files"] = { "UnknowledgedEngine/**.h", "UnknowledgedEngine/header/**.hpp" },
-    ["UnknowledgedEngine/Source Files"] = { "UnknowledgedEngine/**.cpp", "UnknowledgedEngine/**.c" },
+		["CPC4-Lib/Header Files"] = { "CPC4-Lib/**.h", "CPC4-Lib/header/**.hpp" },
+    	["CPC4-Lib/Source Files"] = { "CPC4-Lib/**.cpp", "CPC4-Lib/**.c" },
 	}
 
 	files 
@@ -150,15 +133,15 @@ project "UnknowledgedEngine"
 		"extras/**.h",
 		"external/**.cpp",
 		"external/**.h",
-		"UnknowledgedEngine/**.cpp",
-		"UnknowledgedEngine/**.h",
+		"CPC4-Lib/**.cpp",
+		"CPC4-Lib/**.h",
 	}
 
 	defines {"IMGUI_DISABLE_OBSOLETE_FUNCTIONS","IMGUI_DISABLE_OBSOLETE_KEYIO"}
 -- End of engine
 
 -- Basic Demo
-	project "Unknowledged Engine Demo"
+	project "CPC 4 App"
 	kind "ConsoleApp"
 	language "C++"
 	location "_build"
@@ -166,28 +149,28 @@ project "UnknowledgedEngine"
 	
 	vpaths 
 	{
-	["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
-			["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
+		["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
+		["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
 	}
 
 	files 
 	{
-	"Game/**.cpp",
-	"Game/**.c",
-	"Game/**.h",
+		"Game/**.cpp",
+		"Game/**.c",
+		"Game/**.h",
 	}
 
 	includedirs
 	{
-	"Game/header/",
-	"external", 
-	"lib/imgui",
-	"UnknowledgedEngine/header",
-	"extras"
+		"Game/header/",
+		"external", 
+		"lib/imgui",
+		"CPC4-Lib/header",
+		"extras",
 	}
 
 	link_raylib()
-	links {"UnknowledgedEngine"}
+	links {"CPC4-Lib"}
 
 	filter "action:vs*"
 	debugdir "$(SolutionDir)"	
