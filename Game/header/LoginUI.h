@@ -1,7 +1,7 @@
 #pragma once
 #include "UIBase.h"
 
-class LoginUI : UIBase
+class LoginUI : public UIBase
 {
 public:
 	void Shutdown() override;

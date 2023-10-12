@@ -1,6 +1,5 @@
 #include "AppUI.h"
 #include "imgui.h"
-#include "Globals.h"
 
 void AppUI::Shutdown()
 {

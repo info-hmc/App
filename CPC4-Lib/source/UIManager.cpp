@@ -2,12 +2,12 @@
 
 UIManager::~UIManager()
 {
+	CurrentUI->Shutdown();
+	delete CurrentUI;
 }
 
 UIManager::UIManager()
 {
-	CurrentUI->Shutdown();
-	delete CurrentUI;
 }
 
 void UIManager::SetCurrentUI(UIBase* UI)
@@ -18,10 +18,14 @@ void UIManager::SetCurrentUI(UIBase* UI)
 
 void UIManager::RenderCurrentUI()
 {
+	if (CurrentUI == nullptr)
+		return;
 	CurrentUI->Show();
 }
 
 void UIManager::UpdateCurrentUI(float DeltaTime)
 {
+	if (CurrentUI == nullptr)
+		return;
 	CurrentUI->Tick(DeltaTime);
 }
