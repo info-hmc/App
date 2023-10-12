@@ -9,11 +9,6 @@
 #include "LoginUI.h"
 #include "Globals.h"
 
-void Tick(float DeltaTime)
-{
-	ClearBackground(WHITE);
-}
-
 int main(int argc, char* argv[])
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
@@ -32,11 +27,13 @@ int main(int argc, char* argv[])
 		currentTime = GetTime();
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
+		UIManager.UpdateCurrentUI();
 
 		BeginDrawing();
 		rlImGuiBegin();			
 
-		Tick(deltaTime);
+		ClearBackground(WHITE);
+		UIManager.RenderCurrentUI();
 		
 		rlImGuiEnd();
 		EndDrawing();
