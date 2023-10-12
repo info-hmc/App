@@ -1,10 +1,12 @@
 #pragma once
+#include "UIManager.h"
 
 class Globals
 {
 public:
 	bool WantsToQuit = false;
-
+	UIManager lUIManager;
 };
 
-Globals _Globals;
+extern Globals _Globals;
+

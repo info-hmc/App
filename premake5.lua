@@ -59,6 +59,23 @@ function check_raylib()
 	end
 end
 
+function check_raygui()
+	if(os.isdir("lib/raygui") == false) then
+		if(not os.isfile("raygui-master.zip")) then
+			print("Raygui not found, downloading from github")
+			local result_str, response_code = http.download("https://github.com/raysan5/raygui/archive/refs/heads/master.zip", "raygui-master.zip", {
+				progress = download_progress,
+				headers = { "From: Premake", "Referer: Premake" }
+			})
+		end
+		print("Unzipping to " ..  os.getcwd())
+		zip.extract("raygui-master.zip", os.getcwd())
+		ensure_lib_directory()
+		os.rename("raygui-master", "lib/raygui")
+		os.remove("raygui-master.zip")
+	end
+end
+
 function check_imgui()
 	if(os.isdir("lib/imgui") == false) then
 		if(not os.isfile("imgui-master.zip")) then
@@ -99,6 +116,7 @@ workspace "CPC4"
 	cppdialect "C++20"
 	check_raylib()
 	check_imgui()
+	check_raygui()
 
 	include ("raylib_premake5.lua")
 		
@@ -114,6 +132,7 @@ project "FloatingBoat"
 		"lib/rlImGui",
 		"./external", 
 		"lib/imgui",
+		"lib/raygui",
 		"FloatingBoat/header",
 		"extras",
 		"lib/rres/src"
@@ -130,6 +149,7 @@ project "FloatingBoat"
 	{
 		"lib/imgui/*.h",
 		"lib/imgui/*.cpp",
+		"lib/raygui/src/**.h",
 		"extras/**.h",
 		"external/**.cpp",
 		"external/**.h",
@@ -165,6 +185,7 @@ project "FloatingBoat"
 		"App/header/",
 		"external", 
 		"lib/imgui",
+		"lib/raygui/src",
 		"FloatingBoat/header",
 		"extras",
 	}

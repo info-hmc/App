@@ -1,4 +1,6 @@
 #include "UIManager.h"
+#include <thread>
+#include <chrono>
 
 UIManager::~UIManager()
 {
@@ -12,8 +14,13 @@ UIManager::UIManager()
 
 void UIManager::SetCurrentUI(UIBase* UI)
 {
-	CurrentUI = UI;
+	if (CurrentUI)
+	{
+		CurrentUI->Shutdown();
+		delete CurrentUI;
+	}
 	UI->Setup();
+	CurrentUI = UI;
 }
 
 void UIManager::RenderCurrentUI()
