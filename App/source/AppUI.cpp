@@ -11,8 +11,11 @@ void AppUI::Shutdown()
 
 void AppUI::Setup()
 {
-	SetWindowTitle("App");
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
+	InitWindow(0,0,"");
+	rlImGuiSetup();
 	SetWindowMinSize(800, 600);
+
 
 	// get current monitor resolution
 	int screenWidth = GetMonitorWidth(0);
