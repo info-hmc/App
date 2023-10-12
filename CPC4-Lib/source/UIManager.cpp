@@ -15,3 +15,13 @@ void UIManager::SetCurrentUI(UIBase* UI)
 	CurrentUI = UI;
 	UI->Setup();
 }
+
+void UIManager::RenderCurrentUI()
+{
+	CurrentUI->Show();
+}
+
+void UIManager::UpdateCurrentUI(float DeltaTime)
+{
+	CurrentUI->Tick();
+}
