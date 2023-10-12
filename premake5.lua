@@ -76,7 +76,7 @@ function check_imgui()
 	end
 end
 
-workspace "App"
+workspace "CPC4"
 	configurations { "Debug", "Release" }
 	platforms { "x64"}
 	defaultplatform "x64"
@@ -149,20 +149,20 @@ project "CPC4-Lib"
 	
 	vpaths 
 	{
-		["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
-		["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
+		["App/Header Files"] = { "App/header/**.h", "App/header/**.hpp" },
+		["App/Source Files"] = { "App/**.cpp", "App/**.c" },
 	}
 
 	files 
 	{
-		"Game/**.cpp",
-		"Game/**.c",
-		"Game/**.h",
+		"App/**.cpp",
+		"App/**.c",
+		"App/**.h",
 	}
 
 	includedirs
 	{
-		"Game/header/",
+		"App/header/",
 		"external", 
 		"lib/imgui",
 		"CPC4-Lib/header",
