@@ -1,8 +1,7 @@
 #pragma once
-#include "Templates.h"
+#include "UIBase.h"
 
-
-class AppUI : UITemplate
+class AppUI : UIBase
 {
 public:
 	void Shutdown() override;
