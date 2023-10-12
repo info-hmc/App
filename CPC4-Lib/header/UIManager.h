@@ -8,8 +8,8 @@ public:
 	UIBase* GetCurrentUI() {return CurrentUI;};
 	void RenderCurrentUI();
 	void UpdateCurrentUI(float DeltaTime);
-private:
 	UIManager();
 	~UIManager();
+private:
 	UIBase* CurrentUI;
 };

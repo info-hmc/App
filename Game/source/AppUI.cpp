@@ -21,14 +21,14 @@ void AppUI::Show()
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Exit"))
-				WantsToQuit = true;
+				_Globals.WantsToQuit = true;
 
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Window"))
 		{
-			ImGui::MenuItem("Example Window", nullptr, &BasicWindow.Open);
+			ImGui::MenuItem("Example Window", nullptr, Open);
 
 			ImGui::EndMenu();
 		}

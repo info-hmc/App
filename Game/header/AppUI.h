@@ -8,4 +8,7 @@ public:
 	void Setup() override;
 	void Tick(float DeltaTime) override;
 	void Show() override;
+
+private:
+	bool Open;
 };

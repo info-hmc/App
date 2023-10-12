@@ -1,3 +1,9 @@
 #pragma once
 
-bool WantsToQuit = false;
+class Globals
+{
+public:
+	bool WantsToQuit = false;
+};
+
+Globals _Globals;

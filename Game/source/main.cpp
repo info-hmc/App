@@ -2,12 +2,13 @@
 #include "raymath.h"
 #include "imgui.h"
 #include "rlImGui.h"
-#include "rlImGuiColors.h"
 #include <cstdio>
 #include <iostream>
 #include "UImanager.h"
 #include "LoginUI.h"
-#include "Globals.h"
+
+UIManager lUIManager;
+LoginUI l_loginUI;
 
 int main(int argc, char* argv[])
 {
@@ -18,28 +19,23 @@ int main(int argc, char* argv[])
 	float deltaTime = 0.0f;
 	float previousTime = GetTime();
 	float currentTime = 0.f;
+	//lUIManager.SetCurrentUI(l_loginUI);
 
-	UIManager UIManager = new UIManager;
-	UIManager.SetCurrentUI(LoginUI);
-
-	while (!WantsToQuit)
+	while (!WindowShouldClose())
 	{
 		currentTime = GetTime();
 		deltaTime = currentTime - previousTime;
 		previousTime = currentTime;
-		UIManager.UpdateCurrentUI();
+		lUIManager.UpdateCurrentUI(deltaTime);
 
 		BeginDrawing();
 		rlImGuiBegin();			
 
 		ClearBackground(WHITE);
-		UIManager.RenderCurrentUI();
+		lUIManager.RenderCurrentUI();
 		
 		rlImGuiEnd();
 		EndDrawing();
-
-		if (WindowShouldClose())
-		WantsToQuit = true;
 	}
 	
 	rlImGuiShutdown();

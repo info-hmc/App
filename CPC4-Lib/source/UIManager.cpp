@@ -23,5 +23,5 @@ void UIManager::RenderCurrentUI()
 
 void UIManager::UpdateCurrentUI(float DeltaTime)
 {
-	CurrentUI->Tick();
+	CurrentUI->Tick(DeltaTime);
 }

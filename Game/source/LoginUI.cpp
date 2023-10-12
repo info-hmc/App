@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include "rlImGui.h"
 #include "rlImGuiColors.h"
-#include "Globals.h"
 
 void LoginUI::Shutdown()
 {
@@ -44,8 +43,7 @@ void LoginUI::Show()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Exit"))
-				WantsToQuit = true;
+			
 
 			ImGui::EndMenu();
 		}
