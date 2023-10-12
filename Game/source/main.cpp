@@ -5,17 +5,9 @@
 #include "rlImGuiColors.h"
 #include <cstdio>
 #include <iostream>
-
-//#pragma warning (disable : 4996)
-//#define RRES_RAYLIB_IMPLEMENTATION
-//#include "rres-raylib.h"
-//
-//#define RRES_IMPLEMENTATION
-//#include "rres.h"
-
-
-bool WantsToQuit = false;
-bool IsPaused = false;
+#include "UImanager.h"
+#include "LoginUI.h"
+#include "Globals.h"
 
 class DocumentWindow
 {
@@ -82,7 +74,6 @@ void MenuBar()
 
 void Tick(float DeltaTime)
 {
-	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 	ClearBackground(WHITE);
 	MenuBar();
 	BasicWindow.Show();
@@ -101,18 +92,7 @@ int main(int argc, char* argv[])
 	// set window resolution
 	SetWindowSize((screenWidth / 1.5f), (screenHeight / 1.5f));
 
-	//// new scope to unload when scope ends
-	//{
-	//	// here we set the central file where we store all of the external data
-	//	rresCentralDir dir = rresLoadCentralDirectory("icon.rrp");
-	//	int appiconid = rresGetResourceId(dir, "appicon.png");
-	//	rresSetCipherPassword("password12345");
-	//	rresResourceChunk chunkTex = rresLoadResourceChunk("icon.rrp", appiconid);
-	//	Image Appicon = LoadImageFromResource(chunkTex);
-	//	if (Appicon.data != NULL)
-	//		SetWindowIcon(Appicon);
-	//	UnloadImage(Appicon);  // Unload icon image (not needed any more)
-	//}
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
 	//setup imgui
 	rlImGuiSetup();
@@ -124,6 +104,9 @@ int main(int argc, char* argv[])
 	float previousTime = GetTime();
 	float currentTime = 0.f;
 
+	UIManager UIManager = new UIManager;
+	UIManager::SetCurrentUI(LoginUI);
+
 	while (!WantsToQuit)
 	{
 		currentTime = GetTime();
@@ -134,7 +117,7 @@ int main(int argc, char* argv[])
 		rlImGuiBegin();			
 
 		Tick(deltaTime);
-
+		
 		rlImGuiEnd();
 		EndDrawing();
 
