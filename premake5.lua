@@ -102,7 +102,7 @@ workspace "CPC4"
 
 	include ("raylib_premake5.lua")
 		
-project "CPC4-Lib"
+project "FloatingBoat"
 	kind "StaticLib"
 	location "_build"
 	targetdir "_bin/%{cfg.buildcfg}"
@@ -114,7 +114,7 @@ project "CPC4-Lib"
 		"lib/rlImGui",
 		"./external", 
 		"lib/imgui",
-		"CPC4-Lib/header",
+		"FloatingBoat/header",
 		"extras",
 		"lib/rres/src"
 	}
@@ -122,8 +122,8 @@ project "CPC4-Lib"
 	vpaths 
 	{
 		["ImGui Files"] = { "lib/imgui/*.h","lib/imgui/*.cpp", "lib/imgui-master/*.h", "lib/imgui-master/*.cpp" },
-		["CPC4-Lib/Header Files"] = { "CPC4-Lib/**.h", "CPC4-Lib/header/**.hpp" },
-    	["CPC4-Lib/Source Files"] = { "CPC4-Lib/**.cpp", "CPC4-Lib/**.c" },
+		["FloatingBoat/Header Files"] = { "FloatingBoat/**.h", "FloatingBoat/header/**.hpp" },
+    	["FloatingBoat/Source Files"] = { "FloatingBoat/**.cpp", "FloatingBoat/**.c" },
 	}
 
 	files 
@@ -133,8 +133,8 @@ project "CPC4-Lib"
 		"extras/**.h",
 		"external/**.cpp",
 		"external/**.h",
-		"CPC4-Lib/**.cpp",
-		"CPC4-Lib/**.h",
+		"FloatingBoat/**.cpp",
+		"FloatingBoat/**.h",
 	}
 
 	defines {"IMGUI_DISABLE_OBSOLETE_FUNCTIONS","IMGUI_DISABLE_OBSOLETE_KEYIO"}
@@ -165,12 +165,12 @@ project "CPC4-Lib"
 		"App/header/",
 		"external", 
 		"lib/imgui",
-		"CPC4-Lib/header",
+		"FloatingBoat/header",
 		"extras",
 	}
 
 	link_raylib()
-	links {"CPC4-Lib"}
+	links {"FloatingBoat"}
 
 	filter "action:vs*"
 	debugdir "$(SolutionDir)"	
