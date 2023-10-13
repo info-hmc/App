@@ -12,16 +12,28 @@ void LoginUI::Shutdown()
 	CloseWindow();
 }
 
+ImGuiWindowFlags windowflags = 0;
 void LoginUI::Setup()
 {
 	SetWindowTitle("Login");
 	SetWindowMinSize(320, 240);
 	// set window resolution
 	SetWindowSize(320, 240);
+	windowflags |= ImGuiWindowFlags_NoMove;
+	windowflags |= ImGuiWindowFlags_NoScrollbar;
+	windowflags |= ImGuiWindowFlags_NoTitleBar;
+	windowflags |= ImGuiWindowFlags_NoCollapse;
+	windowflags |= ImGuiWindowFlags_NoScrollWithMouse;
+	windowflags |= ImGuiWindowFlags_NoResize;
+	windowflags |= ImGuiWindowFlags_NoDecoration;
 }
 
 void LoginUI::Tick(float DeltaTime)
 {
+	if (WindowShouldClose())
+	{
+		_Globals.WantsToQuit = true;
+	}
 }
 
 void LoginUI::Show()
@@ -29,12 +41,22 @@ void LoginUI::Show()
 	char Username[256] = "";
 	char Password[256] = "";
 	
-	if (GuiButton(Rectangle{ 10, 200, 300, 30 }, "Login"))
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(320, 240));
+	if (ImGui::Begin("", nullptr, windowflags))
 	{
-		AppUI* appui = new AppUI;
-		_Globals.lUIManager.SetCurrentUI(appui);
+		ImGui::Text("Login");
+		ImGui::Spacing();
+		ImGui::Text("Username");
+		ImGui::SameLine();
+		ImGui::InputText(" ", Username, IM_ARRAYSIZE(Username));
+		ImGui::Text("Password");
+		ImGui::SameLine();
+		ImGui::InputText("##hiddenLabel", Password, IM_ARRAYSIZE(Password));
+		if (ImGui::Button("login"))
+		{
+			AppUI* appui = new AppUI;
+			_Globals.lUIManager.SetCurrentUI(appui);
+		}
 	}
-
-	GuiDrawText("Login", Rectangle{ 10, 10, 300, 30 }, TEXT_ALIGN_CENTER, Color (255, 255, 255));
-	GuiTextBox(Rectangle{ 10, 50, 300, 30 }, Username, sizeof(Username), true);
 }
