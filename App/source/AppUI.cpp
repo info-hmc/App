@@ -7,15 +7,15 @@
 
 void AppUI::Shutdown()
 {
+	CloseWindow();
 }
 
 void AppUI::Setup()
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI | FLAG_MSAA_4X_HINT);
-	InitWindow(0,0,"");
+	InitWindow(800, 600, "App");
 	rlImGuiSetup();
 	SetWindowMinSize(800, 600);
-
 
 	// get current monitor resolution
 	int screenWidth = GetMonitorWidth(0);
@@ -27,6 +27,10 @@ void AppUI::Setup()
 
 void AppUI::Tick(float DeltaTime)
 {
+	if (WindowShouldClose())
+	{
+		_Globals.WantsToQuit = true;
+	}
 }
 
 void AppUI::Show()

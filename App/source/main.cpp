@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[])
 {
-	SetConfigFlags(FLAG_WINDOW_UNDECORATED);
+	SetConfigFlags(0);
 	InitWindow(800, 600, "UnInit Window");
 	rlImGuiSetup();
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	LoginUI* l_loginUI = new LoginUI;
 	_Globals.lUIManager.SetCurrentUI(l_loginUI);
 
-	while (!_Globals.QuitLogin)
+	while (!_Globals.WantsToQuit)
 	{
 		_Globals.lUIManager.UpdateCurrentUI(GetFrameTime());
 
@@ -29,9 +29,8 @@ int main(int argc, char* argv[])
 		rlImGuiEnd();
 		EndDrawing();
 	}
-	
+
 	rlImGuiShutdown();
-	CloseWindow();
 
 	return 0;
 }

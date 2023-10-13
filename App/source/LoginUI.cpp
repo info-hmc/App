@@ -9,6 +9,7 @@
 
 void LoginUI::Shutdown()
 {
+	CloseWindow();
 }
 
 void LoginUI::Setup()
@@ -33,6 +34,7 @@ void LoginUI::Show()
 		AppUI* appui = new AppUI;
 		_Globals.lUIManager.SetCurrentUI(appui);
 	}
+
 	GuiDrawText("Login", Rectangle{ 10, 10, 300, 30 }, TEXT_ALIGN_CENTER, Color (255, 255, 255));
 	GuiTextBox(Rectangle{ 10, 50, 300, 30 }, Username, sizeof(Username), true);
 }
