@@ -6,6 +6,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include "AppUI.h"
+#include <iostream>
 
 void LoginUI::Shutdown()
 {
@@ -38,9 +39,6 @@ void LoginUI::Tick(float DeltaTime)
 
 void LoginUI::Show()
 {
-	char Username[256] = "";
-	char Password[256] = "";
-	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(320, 240));
 	if (ImGui::Begin("", nullptr, windowflags))
@@ -52,11 +50,21 @@ void LoginUI::Show()
 		ImGui::InputText(" ", Username, IM_ARRAYSIZE(Username));
 		ImGui::Text("Password");
 		ImGui::SameLine();
-		ImGui::InputText("##hiddenLabel", Password, IM_ARRAYSIZE(Password));
+		ImGui::InputText("##hiddenLabel", Password, IM_ARRAYSIZE(Password), ImGuiInputTextFlags_Password);
 		if (ImGui::Button("login"))
 		{
-			AppUI* appui = new AppUI;
-			_Globals.lUIManager.SetCurrentUI(appui);
+			Authenticate();
 		}
 	}
+}
+
+void LoginUI::Authenticate()
+{
+	// this is not a real autentication but just a example
+	if (Password != "demo" && Username != "demo")
+		return;
+
+	AppUI* appui = new AppUI;
+	_Globals.lUIManager.SetCurrentUI(appui);
+	
 }

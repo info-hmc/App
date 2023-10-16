@@ -8,5 +8,9 @@ public:
 	void Setup() override;
 	void Tick(float DeltaTime) override;
 	void Show() override;
+
 private:
+	void Authenticate();
+	char Username[256] = "";
+	char Password[256] = "";
 };
