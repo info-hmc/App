@@ -59,6 +59,23 @@ function check_raylib()
 	end
 end
 
+function check_raygui()
+	if(os.isdir("lib/raygui") == false) then
+		if(not os.isfile("raygui-master.zip")) then
+			print("Raygui not found, downloading from github")
+			local result_str, response_code = http.download("https://github.com/raysan5/raygui/archive/refs/heads/master.zip", "raygui-master.zip", {
+				progress = download_progress,
+				headers = { "From: Premake", "Referer: Premake" }
+			})
+		end
+		print("Unzipping to " ..  os.getcwd())
+		zip.extract("raygui-master.zip", os.getcwd())
+		ensure_lib_directory()
+		os.rename("raygui-master", "lib/raygui")
+		os.remove("raygui-master.zip")
+	end
+end
+
 function check_imgui()
 	if(os.isdir("lib/imgui") == false) then
 		if(not os.isfile("imgui-master.zip")) then
@@ -76,7 +93,7 @@ function check_imgui()
 	end
 end
 
-workspace "App"
+workspace "CPC4"
 	configurations { "Debug", "Release" }
 	platforms { "x64"}
 	defaultplatform "x64"
@@ -99,10 +116,11 @@ workspace "App"
 	cppdialect "C++20"
 	check_raylib()
 	check_imgui()
+	check_raygui()
 
 	include ("raylib_premake5.lua")
 		
-project "CPC4-Lib"
+project "FloatingBoat"
 	kind "StaticLib"
 	location "_build"
 	targetdir "_bin/%{cfg.buildcfg}"
@@ -114,7 +132,8 @@ project "CPC4-Lib"
 		"lib/rlImGui",
 		"./external", 
 		"lib/imgui",
-		"CPC4-Lib/header",
+		"lib/raygui",
+		"FloatingBoat/header",
 		"extras",
 		"lib/rres/src"
 	}
@@ -122,19 +141,20 @@ project "CPC4-Lib"
 	vpaths 
 	{
 		["ImGui Files"] = { "lib/imgui/*.h","lib/imgui/*.cpp", "lib/imgui-master/*.h", "lib/imgui-master/*.cpp" },
-		["CPC4-Lib/Header Files"] = { "CPC4-Lib/**.h", "CPC4-Lib/header/**.hpp" },
-    	["CPC4-Lib/Source Files"] = { "CPC4-Lib/**.cpp", "CPC4-Lib/**.c" },
+		["FloatingBoat/Header Files"] = { "FloatingBoat/**.h", "FloatingBoat/header/**.hpp" },
+    	["FloatingBoat/Source Files"] = { "FloatingBoat/**.cpp", "FloatingBoat/**.c" },
 	}
 
 	files 
 	{
 		"lib/imgui/*.h",
 		"lib/imgui/*.cpp",
+		"lib/raygui/src/**.h",
 		"extras/**.h",
 		"external/**.cpp",
 		"external/**.h",
-		"CPC4-Lib/**.cpp",
-		"CPC4-Lib/**.h",
+		"FloatingBoat/**.cpp",
+		"FloatingBoat/**.h",
 	}
 
 	defines {"IMGUI_DISABLE_OBSOLETE_FUNCTIONS","IMGUI_DISABLE_OBSOLETE_KEYIO"}
@@ -149,28 +169,29 @@ project "CPC4-Lib"
 	
 	vpaths 
 	{
-		["Game/Header Files"] = { "Game/header/**.h", "Game/header/**.hpp" },
-		["Game/Source Files"] = { "Game/**.cpp", "Game/**.c" },
+		["App/Header Files"] = { "App/header/**.h", "App/header/**.hpp" },
+		["App/Source Files"] = { "App/**.cpp", "App/**.c" },
 	}
 
 	files 
 	{
-		"Game/**.cpp",
-		"Game/**.c",
-		"Game/**.h",
+		"App/**.cpp",
+		"App/**.c",
+		"App/**.h",
 	}
 
 	includedirs
 	{
-		"Game/header/",
+		"App/header/",
 		"external", 
 		"lib/imgui",
-		"CPC4-Lib/header",
+		"lib/raygui/src",
+		"FloatingBoat/header",
 		"extras",
 	}
 
 	link_raylib()
-	links {"CPC4-Lib"}
+	links {"FloatingBoat"}
 
 	filter "action:vs*"
 	debugdir "$(SolutionDir)"	
